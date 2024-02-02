@@ -1,34 +1,36 @@
 #!/usr/bin/python3
-""" a Fabric script (based on the file 1-pack_web_static.py) that distributes..
-    ..an archive to your web servers, using the function do_deploy: """
+"""script based on the file 1-pack_web_static.py that distributes an
+archive to the web servers
+"""
 
-
-from fabric.api import *
-from datetime import datetime
+from fabric.api import put, run, env
 from os.path import exists
 
 
-env.hosts = ["34.202.159.136", "54.237.99.66"]
+env.hosts = ['54.237.99.66', '34.202.159.136']
 
 
 def do_deploy(archive_path):
-    """distributes an archive to my web servers"""
-    if exists(archive_path) is False:
+    """distributes an archive to servers"""
+    if not exists(archive_path):
+        print("Archive does not exist.")
         return False
-    filename = archive_path.split("/")[-1]
-    no_tgz = "/data/web_static/releases/" + "{}".format(filename.split(".")[0])
-    # curr = '/data/web_static/current'
-    tmp = "/tmp/" + filename
-
     try:
-        put(archive_path, "/tmp/")
-        run("mkdir -p {}/".format(no_tgz))
-        run("tar -xzf {} -C {}/".format(tmp, no_tgz))
-        run("rm {}".format(tmp))
-        run("mv {}/web_static/* {}/".format(no_tgz, no_tgz))
-        run("rm -rf {}/web_static".format(no_tgz))
-        run("rm -rf /data/web_static/current")
-        run("ln -s {}/ /data/web_static/current".format(no_tgz))
+        file_n = archive_path.split("/")[-1]
+        no_ext = file_n.split(".")[0]
+        path = "/data/web_static/releases/"
+        put(archive_path, '/tmp/')
+        run('sudo mkdir -p {}{}/'.format(path, no_ext))
+        run('sudo tar -xzf /tmp/{} -C {}{}/'.format(file_n, path, no_ext))
+        run('sudo rm /tmp/{}'.format(file_n))
+        run('sudo mv {0}{1}/web_static/* {0}{1}/'.format(path, no_ext))
+        run('sudo rm -rf {}{}/web_static'.format(path, no_ext))
+        run('sudo rm -rf /data/web_static/current')
+        run('sudo ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
+        if run('test -e /data/web_static/current').failed:
+            print("Failed to create symlink.")
+            return False
         return True
-    except:
+    except Exception as e:
+        print("An error occurred during deployment: {}".format(str(e)))
         return False
