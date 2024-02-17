@@ -1,16 +1,35 @@
 #!/usr/bin/python3
 """module: __init__"""
 
-from models.engine import file_storage
-
-
 from os import getenv
-from models.engine.file_storage import FileStorage
-from models.engine.db_storage import DBStorage
 
-if getenv('HBNB_TYPE_STORAGE') == 'db':
+from models.state import State
+from models.city import City
+from models.user import User
+from models.review import Review
+from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.place import Place
+
+type_of_storage = getenv("HBNB_TYPE_STORAGE")
+
+if type_of_storage == "db":
+    from models.engine.db_storage import DBStorage
+
     storage = DBStorage()
+    storage.reload()
 else:
-    storage = FileStorage()
+    from models.engine.file_storage import FileStorage
 
-storage.reload()
+    storage = FileStorage()
+    storage.reload()
+
+classes = {
+    "State": State,
+    "City": City,
+    "User": User,
+    "Review": Review,
+    "BaseModel": BaseModel,
+    "Amenity": Amenity,
+    "Place": Place,
+}
