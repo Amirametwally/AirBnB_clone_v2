@@ -3,7 +3,6 @@
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
-from models.state import State
 
 class City(BaseModel, Base):
     """class city inherits from BaseModel and Base"""
