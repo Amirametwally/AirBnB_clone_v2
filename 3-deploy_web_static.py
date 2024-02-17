@@ -41,8 +41,12 @@ def do_deploy(archive_path):
         run("sudo rm -rf {}{}/web_static".format(path, no_ext))
         run("sudo rm -rf /data/web_static/current")
         run("sudo ln -s {}{}/ /data/web_static/current".format(path, no_ext))
+        if run("test -e /data/web_static/current").failed:
+            print("Failed to create symlink.")
+            return False
         return True
     except Exception as e:
+        print("An error occurred during deployment: {}".format(str(e)))
         return False
 
 
