@@ -76,3 +76,6 @@ class FileStorage:
                         FileStorage.__objects[key] = Review(**val)
         except FileNotFoundError:
             pass
+
+    def close(self):
+        self.reload()
