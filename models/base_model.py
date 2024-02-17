@@ -6,12 +6,22 @@ class BaseModel
 import uuid
 from datetime import datetime
 import models
+from sqlalchemy import Column, String, DateTime, create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from os import getenv
 
+Base = declarative_base()
 
 class BaseModel:
     """
     public instance attributes
     """
+
+    id = Column(String(60), primary_key=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
 
     def __init__(self, *args, **kwargs):
         """Initialize a new instancd of BaseModel"""
@@ -39,15 +49,15 @@ class BaseModel:
         update public instance attribute updated_at
         with the current datetime """
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
-        """
-        returns dictionary containing all keys/values of the instance
-        """
-        new_dict = self.__dict__.copy()
-        new_dict["__class__"] = self.__class__.__name__
-        new_dict["created_at"] = new_dict["created_at"].isoformat()
-        new_dict["updated_at"] = new_dict["updated_at"].isoformat()
+        """Return a dictionary representation of the model"""
+        new_dict = super().to_dict()
+        if '_sa_instance_state' in new_dict:
+            del new_dict['_sa_instance_state']
+        return new_dict
 
-        return (new_dict)
+    def delete(self):
+        models.storage.delete(self)
