@@ -18,15 +18,9 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
-    def all(self, cls=None):
+    def all(self):
         """return the dictionary"""
-        if cls is not None:
-            new= {}
-            for key, value in self.__objects.items():
-                if cls == value.__class__ or cls == value.__class__.__name__:
-                    new[key] = value
-            return new
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """set in __objects the obj"""
@@ -41,12 +35,11 @@ class FileStorage:
         with open(FileStorage.__file_path, "w") as file:
             json.dump(dictionary_obj, file)
 
-    def delete(self, obj=None):
+    def delete(self, obj):
         """Delete obj from __objects if it’s inside"""
-        if obj is not None:
-            key = obj.__class__.__name__ + "." + obj.id
-            if key in FileStorage.__objects:
-                del FileStorage.__objects[key]
+        key = obj.__class__.__name__ + "." + obj.id
+        if key in FileStorage.__objects:
+            del FileStorage.__objects[key]
 
     def get(self, cls, id):
         """Return an object based on the class name and its ID,
