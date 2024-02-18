@@ -67,10 +67,10 @@ class HBNBCommand(cmd.Cmd):
                 to_parse[tuple_item[0]] = tuple_item[2]
             for k, v in to_parse.items():
 
-                if re.match("^\w+_id$", k):
+                if re.match("^\\w+_id$", k):
                     sanitized_args[k] = v
 
-                elif re.match("^[-+]?\d+\.\d+$", v):
+                elif re.match("^[-+]?\\d+\\.\\d+$", v):
                     sanitized_args[k] = float(v)
                 elif v.isdigit() is True:
                     sanitized_args[k] = int(v)
@@ -217,15 +217,15 @@ class HBNBCommand(cmd.Cmd):
         new_list = []
         new_list.append(args[0])
         try:
-            my_dict = eval(args[1][args[1].find("{") : args[1].find("}") + 1])
+            my_dict = eval(args[1][args[1].find("{"): args[1].find("}") + 1])
         except Exception:
             my_dict = None
         if isinstance(my_dict, dict):
-            new_str = args[1][args[1].find("(") + 1 : args[1].find(")")]
+            new_str = args[1][args[1].find("(") + 1: args[1].find(")")]
             new_list.append(((new_str.split(", "))[0]).strip('"'))
             new_list.append(my_dict)
             return new_list
-        new_str = args[1][args[1].find("(") + 1 : args[1].find(")")]
+        new_str = args[1][args[1].find("(") + 1: args[1].find(")")]
         new_list.append(" ".join(new_str.split(", ")))
         return " ".join(i for i in new_list)
 
