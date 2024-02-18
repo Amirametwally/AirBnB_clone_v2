@@ -2,7 +2,7 @@
 """class Amenity that inherit from BaseModel"""
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Table
+from sqlalchemy import Column, String, ForeignKey, Table, Integer
 import models
 from sqlalchemy.orm import relationship
 from os import getenv
@@ -14,6 +14,7 @@ class Amenity(BaseModel):
     """public class attribute"""
 
     __tablename__ = "amenities"
+    id = Column(Integer, primary_key=True)
     name = Column(String(128), nullable=False)
     if type_of_storage == "db":
         place_amenities = relationship(
