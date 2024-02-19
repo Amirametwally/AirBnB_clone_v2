@@ -43,7 +43,8 @@ class BaseModel:
 
     def __str__(self):
         """returns a string"""
-        return "[{}] ({}) {}".format(type(self).__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(type(self).__name__,
+                                     self.id, self.__dict__)
 
     def __repr__(self):
         """return a string representaion"""
