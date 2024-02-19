@@ -51,9 +51,10 @@ class DBStorage:
             if cls is not None:
                 objects = self.__session.query(cls).all()
             else:
-                return obj_dict  # Return empty dict if cls is not found in all_classes
+                return obj_dict
         else:
-            objects = self.__session.query(State, City, User, Amenity, Place, Review).all()
+            objects = self.__session.query(State, City, User,
+                                           Amenity, Place, Review).all()
         for obj in objects:
             key = obj.__class__.__name__ + "." + obj.id
             value = obj
@@ -78,7 +79,8 @@ class DBStorage:
         """Create tables and current database session"""
         Base.metadata.create_all(self.__engine)
 
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
 
